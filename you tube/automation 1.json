@@ -1,0 +1,641 @@
+{
+  "name": "automation 1",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "# Automation 1 \n\n### Filling the form and then sending it to the google sheets "
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -704,
+        -320
+      ],
+      "typeVersion": 1,
+      "id": "02522e1f-a215-4205-9ad4-73f0b1aa57cb",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "formTitle": "consultation form",
+        "formDescription": "This form is for consulting with me regarding the ai ml learning ",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "service",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "consultation"
+                  },
+                  {
+                    "option": "AI training"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -608,
+        -16
+      ],
+      "id": "3e6af81b-1ad7-4e08-a3d7-381ddd950d7f",
+      "name": "On form submission",
+      "webhookId": "40b84eea-163c-4901-a6e9-0227c5d3d1f6",
+      "notesInFlow": true,
+      "notes": "My first form "
+    },
+    {
+      "parameters": {
+        "resource": "spreadsheet",
+        "title": "Service request ",
+        "sheetsUi": {
+          "sheetValues": [
+            {
+              "title": "Service result "
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        576,
+        224
+      ],
+      "id": "b662b8d3-708d-49fb-b8b5-161768a9dae6",
+      "name": "Create spreadsheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "LM7kW4nMXfls41KY",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('sheet id , document id , sheet url').item.json.spreadsheetUrl }}",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('sheet id , document id , sheet url').item.json.sheets[0].properties.sheetId }}",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1840,
+        64
+      ],
+      "id": "5c871cd8-dac8-497b-86aa-d6efb495def1",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "LM7kW4nMXfls41KY",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "Service request ",
+        "returnAll": true,
+        "filter": {
+          "driveId": {
+            "__rl": true,
+            "value": "My Drive",
+            "mode": "list",
+            "cachedResultName": "My Drive",
+            "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+          },
+          "folderId": {
+            "__rl": true,
+            "value": "root",
+            "mode": "list",
+            "cachedResultName": "/ (Root folder)",
+            "cachedResultUrl": "https://drive.google.com/drive"
+          },
+          "whatToSearch": "all"
+        },
+        "options": {
+          "fields": [
+            "*"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -352,
+        64
+      ],
+      "id": "b8dead0f-f9ba-4c5d-92e3-a5153e8eaf57",
+      "name": "Search files and folders",
+      "alwaysOutputData": true,
+      "notesInFlow": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "FYIXjyjLmxGDDxrJ",
+          "name": "Google Drive account"
+        }
+      },
+      "notes": "checking if the google sheet is already created or not "
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "69029bfb-4d06-4314-8e5d-47052856521d",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "9924065b-f1e3-42e2-a3c1-74b3b3920dbd",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "93d31c6e-b7c6-4fc3-abb2-0b2393886bd2",
+              "name": "parents[0]",
+              "value": "={{ $json.parents[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "90b56c73-0db0-4375-a24d-778e6752d8fd",
+              "name": "Name",
+              "value": "={{ $('On form submission').item.json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "c8b6189c-355c-416a-8d16-dbc2f00069f2",
+              "name": "service",
+              "value": "={{ $('On form submission').item.json.service }}",
+              "type": "string"
+            },
+            {
+              "id": "304e43a5-062f-489f-a67c-dc4bb21cac38",
+              "name": "google sheet  url ",
+              "value": "={{ $json.exportLinks['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] }}",
+              "type": "string"
+            },
+            {
+              "id": "a6cfbed9-5e8a-4ddc-ab38-cc934f36675c",
+              "name": "sheet 1 url ",
+              "value": "={{ $json.exportLinks['application/vnd.oasis.opendocument.spreadsheet'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -64,
+        176
+      ],
+      "id": "28e214aa-f9a7-4c26-a7d6-5332bad33898",
+      "name": "Spread sheet check"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    },
+                    "id": "e4172c4c-1800-48d9-a512-59399d3b2bcf"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "File there"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "File not there"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        272,
+        112
+      ],
+      "id": "bd653b10-456d-4973-ae74-762d9ae4e3f1",
+      "name": "Switch",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.spreadsheetId }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1UCsn8KBDMAwFau_HszmgZwZ2_fHZJAYP",
+          "mode": "list",
+          "cachedResultName": "youtube n8n ",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1UCsn8KBDMAwFau_HszmgZwZ2_fHZJAYP"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        896,
+        320
+      ],
+      "id": "e35b304f-5a71-480d-a67c-923972befd37",
+      "name": "Move file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "FYIXjyjLmxGDDxrJ",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "79cc102b-ad90-449b-aa00-8008ea3069a4",
+              "name": "sheet 1 url ",
+              "value": "={{ $json['sheet 1 url '] }}",
+              "type": "string"
+            },
+            {
+              "id": "6ed397f1-1b5c-4c32-abb2-a5a2146671dd",
+              "name": "document id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "8aa80722-26a3-4d7b-9975-b61567c25a9c",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "e1a6ec0c-f57e-4ad1-a966-97a6bacebc45",
+              "name": "parents",
+              "value": "={{ $json.parents }}",
+              "type": "array"
+            },
+            {
+              "id": "cae9aadc-73cf-4e77-8432-dc50e573e2d7",
+              "name": "google sheet  url ",
+              "value": "={{ $json['google sheet  url '] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        -64
+      ],
+      "id": "229f881c-7abe-4e2f-870d-80ed3fa1f4b5",
+      "name": "Sheet url  & document id & document name",
+      "notesInFlow": true,
+      "notes": "Sheet url  & document id & document name "
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5296c74b-8bbb-43ef-b271-9cbb64bc94ed",
+              "name": "Name",
+              "value": "={{ $('Switch').item.json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "9c0b5abb-cf54-40a1-a55e-261537b86187",
+              "name": "service",
+              "value": "={{ $('Switch').item.json.service }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1104,
+        -112
+      ],
+      "id": "6e565b7b-2b82-4ad9-80e3-42aff6a1d60c",
+      "name": "edit field1",
+      "notesInFlow": true,
+      "notes": "already existing sheet form data"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "73374b11-c120-44a7-999a-8de2943462e6",
+              "name": "Name",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "e575f1f9-b70e-4066-b11a-04f8813728ec",
+              "name": "service",
+              "value": "={{ $json.service }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1472,
+        208
+      ],
+      "id": "07f0d773-7332-4973-9782-d64660e6fa7b",
+      "name": "data"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Sheet url  & document id & document name').item.json['sheet 1 url '] }}",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Service result ",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1584,
+        -176
+      ],
+      "id": "1c5e7ab7-804d-4d0e-bb37-398e3c3088ee",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "LM7kW4nMXfls41KY",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f521ded2-1f49-47a7-8368-e2cb4ead4f9a",
+              "name": "Name",
+              "value": "={{ $('On form submission').item.json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "32ccb341-d9a3-41ea-af06-1aea3d703b0f",
+              "name": "service",
+              "value": "={{ $('On form submission').item.json.service }}",
+              "type": "string"
+            },
+            {
+              "id": "45d3b898-1b84-4e91-aade-fc4b607d217e",
+              "name": "spreadsheetId",
+              "value": "={{ $json.spreadsheetId }}",
+              "type": "string"
+            },
+            {
+              "id": "ee8319cb-2177-44c4-b7d9-1f0fb3cf7c46",
+              "name": "spreadsheetUrl",
+              "value": "={{ $json.spreadsheetUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "cd6994f6-37b1-4487-be36-7bb1d6a76dec",
+              "name": "sheets[0].properties.sheetId",
+              "value": "={{ $json.sheets[0].properties.sheetId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1136,
+        96
+      ],
+      "id": "1c50063b-402e-48d6-bf29-5982b2b502cf",
+      "name": "sheet id , document id , sheet url",
+      "notesInFlow": true,
+      "notes": "Newly created sheet form data"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create spreadsheet": {
+      "main": [
+        [
+          {
+            "node": "Move file",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "sheet id , document id , sheet url",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "Spread sheet check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spread sheet check": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Sheet url  & document id & document name",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create spreadsheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move file": {
+      "main": [
+        []
+      ]
+    },
+    "Sheet url  & document id & document name": {
+      "main": [
+        [
+          {
+            "node": "edit field1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "edit field1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "data": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "sheet id , document id , sheet url": {
+      "main": [
+        [
+          {
+            "node": "data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d9adea3b-1504-43e8-8c14-84703210deb6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9673edea8bf8caee238d854c3b7ea4ed58cc42f33114de02c2836f7594a777f5"
+  },
+  "id": "n2XagM4ivxVrG38D",
+  "tags": []
+}
